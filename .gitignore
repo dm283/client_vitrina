@@ -1,0 +1,8 @@
+venv/
+client_vitrina/media/
+client_vitrina/client_service/migrations/
+client_vitrina/client_service/__pycache__/
+client_vitrina/client_vitrina/__pycache__/
+client_vitrina/client_service/static/node_modules/
+client_vitrina/client_service/static/package-lock.json
+client_vitrina/client_service/static/package.json

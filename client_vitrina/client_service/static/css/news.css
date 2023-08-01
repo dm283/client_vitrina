@@ -1,0 +1,138 @@
+#header {
+    background: RoyalBlue;
+    padding: 10px 0px 10px 20px;
+}
+
+#header_title {
+    margin-left: 15px;
+    font-weight:normal;
+    color: GhostWhite;
+    display: inline-block;
+}
+
+.button_show_sidebar {
+    background-color: RoyalBlue;
+    border: 1px solid white;
+    border-radius: 20px;
+    color: White;
+    width: 40px;
+    height: 40px;
+}
+
+.button_show_sidebar:hover {
+    background-color: DodgerBlue;
+}
+
+.sidebar {
+    float: left;
+    display: flex;
+}
+
+.sidebar_button_close {
+    background-color: DarkBlue;
+    color: White;
+    font-weight: bold;
+    border: none;
+    width: 100%;
+    height: 62px;
+    margin-bottom: 2px;
+}
+
+.sidebar_button_close:hover {
+    background-color: MediumBlue;
+}
+
+.a_button {
+    display: block;
+    width: 97.5%;
+    height: 50px;
+    background-color: SteelBlue;
+    color: White;
+    text-align: center;
+    line-height: 3;
+    text-decoration: none;
+    margin: 0px 0px 2px 4px;
+}
+
+.a_button:hover {
+    background-color: LightSteelBlue;
+}
+
+
+#main {
+    border: 1px solid gainsboro;
+}
+
+#content { 
+    padding: 0 20px 20px 20px;
+}
+
+.block_name{
+    margin: 10px 0px 0px 0px;
+    color: SlateGray;
+}
+
+.detail_form label { 
+    font-size: 13px;
+    font-weight: bold;
+    color: SlateGray;
+    margin-bottom:4px; 
+    width: 260px;
+}
+
+.detail_form input { 
+    font-size: 13px;
+    width: 320px;
+    margin:0 0 0px;
+    border:1px solid gainsboro;
+    border-radius: 5px;
+    padding:6px 10px;
+}
+
+.buttons_area {
+    margin: 15px 0px 0px 0px;
+    padding: 0px;
+}
+
+.form_fields_area {
+    margin-top: 15px;
+}
+
+.buttons_area input[type=submit], input[type=button] {
+    border-radius: 5px;
+    width: 100px;
+    background:Teal;
+    color: WhiteSmoke;
+    margin-right: 5px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    padding:6px 10px;
+    border: None;
+}
+
+.buttons_area input[type=submit]:hover, input[type=button]:hover{
+    background: LightSeaGreen;
+}
+
+.div_posted_status{
+    width: fit-content;
+    margin: 10px 0px 15px 0px;
+    padding: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    color: GhostWhite;
+    background-color: MediumSeaGreen;
+}
+
+.div_not_posted_status{
+    width: fit-content;
+    margin: 10px 0px 15px 0px;
+    padding: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    color: GhostWhite;
+    background-color: RosyBrown;
+}

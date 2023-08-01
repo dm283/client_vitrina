@@ -1,0 +1,55 @@
+{% extends "client_service/base.html" %}
+
+{% block content %}
+
+<h5 class="block_name">Партия товаров</h5>
+
+<form class='detail_form' action="" method="post">
+  <div class="buttons_area">
+    <a href="{% url 'client_service:consignment_close' consignment.id %}"><input type="button" value="CLOSE"></a>
+  </div>
+
+  <div class="form_fields_area">
+    {{ form.as_p }}
+    {% csrf_token %}
+  </div>
+</form>
+
+<hr>
+
+<h5 class="block_name">Документы</h5>
+
+<table
+    id="table"
+    data-toggle="table"
+    data-show-export="true"
+    data-pagination="true"
+    data-show-columns="true"
+    data-search="true"
+    data-advanced-search="true"
+    data-id-table="advancedTable"
+    data-reorderable-columns="true"
+    data-resizable="true"
+    data-search-align="left"
+    data-buttons-align="left"
+>  
+  <thead>
+  <tr>
+    <th data-sortable="true" data-field="docnum">Номер документа</th>
+    <th data-sortable="true" data-field="docdate">Дата документа</th>
+    <th data-sortable="true" data-field="docname">Наименование документа</th>
+  </tr>
+  </thead>
+  <tbody>
+    {% for document in documents %}
+    <tr>
+      <td><a href="{% url 'client_service:document_update' document.id %}">{{ document.docnum }}</a></td>
+      <td>{{ document.docdate }}</td>
+      <td>{{ document.docname }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
