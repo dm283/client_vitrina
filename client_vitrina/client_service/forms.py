@@ -1,5 +1,5 @@
 from django import forms
-from .models import Consignment, Contact, Document
+from .models import Consignment, Carpass, Contact, Document
 from django.contrib.admin.widgets import AdminDateWidget
 
 
@@ -11,6 +11,7 @@ class ConsignmentForm(forms.ModelForm):
         # fields = '__all__'
 
         widgets = {
+            'key_id': forms.HiddenInput(),
             'nttn_date': forms.DateInput(attrs=dict(type='date')),
         }
 
@@ -42,11 +43,51 @@ class ConsignmentForm(forms.ModelForm):
         # }
 
 
+class CarpassForm(forms.ModelForm):
+    class Meta:
+        model = Carpass
+        fields = ['guid', 'id_enter', 'ncar', 'dateen', 'timeen', 'ntir', 'nkont',
+                  'driver', 'drv_man', 'dev_phone', 'contact', 'contact_name', 'contact_broker', 'broker_name', 'place_n', 'dateex', 'timeex']
+        # fields = '__all__'
+
+        widgets = {
+            'guid': forms.HiddenInput(),
+            'id_enter': forms.HiddenInput(),
+            'dateen': forms.DateInput(attrs=dict(type='date')),
+            'dateex': forms.DateInput(attrs=dict(type='date')),
+        }
+
+        labels = {
+            # 'guid': 'Уникальный идентификатор записи', 
+            # 'id_enter': 'ID пропуска въезда ТС на терминал', 
+            'ncar': 'Номер ТС', 
+            'dateen': 'Дата въезда', 
+            'timeen': 'Время въезда', 
+            'ntir': 'Номер документа доставки', 
+            'nkont': 'Номер контейнера', 
+            'driver': 'Наименование перевозчика', 
+            'drv_man': 'ФИО водителя', 
+            'dev_phone': 'Телефон водителя для связи', 
+            'contact': 'Код клиента', 
+            'contact_name': 'Наименование клиента', 
+            'contact_broker': 'Код брокера', 
+            'broker_name': 'Наименование брокера', 
+            'place_n': 'Номер стоянки', 
+            'dateex': 'Дата выезда',
+            'timeex': 'Время выезда', 
+        }
+
+
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         # fields = '__all__'
-        fields = ['guid_partia', 'docnum', 'docdate', 'docname', 'file']
+        fields = ['guid_partia', 'id_enter', 'docnum', 'docdate', 'docname', 'file']
+
+        widgets = {
+            'guid_partia': forms.HiddenInput(),
+            'id_enter': forms.HiddenInput(),
+        }
 
         labels = {
             'docnum': 'Номер документа', 
@@ -54,24 +95,3 @@ class DocumentForm(forms.ModelForm):
             'docname': 'Наименование документа', 
             'file': 'Файл', 
         }
-
-
-# class ContactForm(forms.ModelForm):
-#     class Meta:
-#         model = Contact
-#         fields = ['contact', 'type', 'name', 'inn', 'fio', 'email0', 'email1', 'email2', 'idtelegram', 'tags', 'login', 'pwd', ]
-        
-#         labels = {
-#             'contact': 'Код клиента', 
-#             'type': 'Тип пользователя', 
-#             'name': 'Наименование организации', 
-#             'inn': 'ИНН организации', 
-#             'fio': 'ФИО представителя', 
-#             'email0': 'Почта для смены пароля и контактов по работе портала', 
-#             'email1': 'Почта отсылки сообщений', 
-#             'email2': 'Почта для передачи документов партии товара', 
-#             'idtelegram': 'Telegram ID', 
-#             'tags': 'Хэштеги', 
-#             'login': 'Логин', 
-#             'pwd': 'Пароль', 
-#         }

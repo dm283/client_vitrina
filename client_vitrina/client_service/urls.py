@@ -9,12 +9,17 @@ urlpatterns = [
     path('consignments/<int:id>/', views.consignment_update, name='consignment_update'),
     # path('consignments/add', views.consignment_add, name='consignment_add'),
     # path('consignments/add_complete', views.post_consignment, name='post_consignment'),
-    # path('consignments/<int:id>/update', views.consignment_update, name='consignment_update'),
+    path('consignments/<int:id>/update', views.consignment_update, name='consignment_update'),
     # path('consignments/<int:id>/delete', views.consignment_delete, name='consignment_delete'),
     # path('consignments/<int:id>/post', views.consignment_post, name='consignment_post'),
     # path('consignments/<int:id>/rollback', views.consignment_rollback, name='consignment_rollback'),
     path('consignments/<int:id>/close', views.consignment_close, name='consignment_close'),
     # path('consignments/<int:id>/add_document', views.consignment_add_document, name='consignment_add_document'),
+
+    path('carpass', views.carpass_list, name='carpass_list'),
+    path('carpass/<int:id>/', views.carpass_update, name='carpass_update'),
+    path('carpass/<int:id>/update', views.carpass_update, name='carpass_update'),
+    path('carpass/<int:id>/close', views.carpass_close, name='carpass_close'),
 
     path('documents/<int:id>/update', views.document_update, name='document_update'),
     # path('documents/<int:id>/delete', views.document_delete, name='document_delete'),
