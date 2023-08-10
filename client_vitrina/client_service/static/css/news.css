@@ -1,5 +1,5 @@
 #header {
-    background: RoyalBlue;
+    background: SeaGreen;
     padding: 10px 0px 11px 20px;
 }
 
@@ -11,7 +11,7 @@
 }
 
 .button_show_sidebar {
-    background-color: RoyalBlue;
+    background-color: SeaGreen;
     border: 1px solid white;
     border-radius: 20px;
     color: White;
@@ -20,7 +20,7 @@
 }
 
 .button_show_sidebar:hover {
-    background-color: DodgerBlue;
+    background-color: MediumSeaGreen;
 }
 
 .sidebar {
@@ -29,7 +29,7 @@
 }
 
 .sidebar_button_close {
-    background-color: RoyalBlue;
+    background-color: SeaGreen;
     color: White;
     font-weight: bold;
     border: none;
