@@ -1,8 +1,11 @@
+import os
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Consignment, Carpass, Contact, Document
 from .forms import ConsignmentForm, CarpassForm, DocumentForm
 from django.views.decorators.http import require_POST
 from datetime import datetime
+from django.conf import settings
+from django.http import HttpResponse, Http404
 
 
 #  CONSIGNMENT ******************************************
@@ -111,7 +114,7 @@ def document_update(request, id):
     return render(request,
                   'client_service/document/update.html',
                   {'form': form,
-                   'document_id': document.id,
+                   'document': document,
                    'entity': entity, })
 
 
@@ -133,3 +136,18 @@ def document_close(request, id):
                   'client_service/document/close.html',
                   {'document': document})
 
+
+def document_download(request, id):
+    """
+    Скачивает документ
+    """
+    document = get_object_or_404(Document, id=id)
+    path = str(document.file)
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    print(file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="text/plain")
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            return response
+    return Http404
