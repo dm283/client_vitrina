@@ -26,7 +26,7 @@ def consignment_update(request, id):
         documents = ''
     
     data = {}
-    data['block_name'] = 'ПАРТИЯ ТОВАРОВ' #'Партия товаров'
+    data['block_name'] = 'Партия товаров'  # 'ПАРТИЯ ТОВАРОВ'
     data['entity'] = 'consignment'
     data['id'] = consignment.key_id
 
@@ -72,7 +72,7 @@ def carpass_update(request, id):
         documents = ''
 
     data = {}
-    data['block_name'] = 'ПРОПУСК' #'Пропуск'
+    data['block_name'] = 'Пропуск'  # 'ПРОПУСК' #
     data['entity'] = 'carpass'
     data['id'] = carpass.id_enter
     
