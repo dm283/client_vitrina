@@ -8,10 +8,12 @@ from django.conf import settings
 from django.http import HttpResponse, Http404
 
 
+contact_test_id = 12134  # для тестовой версии, пока не добавлена страница аутентификации
+
 #  CONSIGNMENT ******************************************
 def consignment_list(request):
     try:
-        consignments = Consignment.objects.filter(posted=True).filter(contact=6)
+        consignments = Consignment.objects.filter(posted=True).filter(contact=contact_test_id)
     except:
         consignments = ''
 
@@ -57,7 +59,7 @@ def consignment_close(request, id):
 #  CARPASS ******************************************
 def carpass_list(request):
     try:
-        carpasses = Carpass.objects.filter(posted=True).filter(contact=6)
+        carpasses = Carpass.objects.filter(posted=True).filter(contact=contact_test_id)
     except:
         carpasses = ''
 

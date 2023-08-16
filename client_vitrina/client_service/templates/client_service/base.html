@@ -26,14 +26,14 @@
     <div class="sidebar_button_close">
       <button class="button_show_sidebar" onclick="w3_close()">&#9776;</button>
     </div>
-      <a href="{% url 'client_service:consignment_list' %}" class="a_button">ПАРТИИ ТОВАРОВ</a>
       <a href="{% url 'client_service:carpass_list' %}" class="a_button">ПРОПУСКА</a>
+      <a href="{% url 'client_service:consignment_list' %}" class="a_button">ПАРТИИ ТОВАРОВ</a>
   </div>
 
   <div id="main" style="margin-left: 15%;">
     <div id="header">
       <button id="openNav" class="button_show_sidebar" style="display: none" onclick="w3_open()">&#9776;</button>
-      <h3 id="header_title">Кабинет клиента <b>[ Производственная компания ТургорАМ ]</b></h3>
+      <h3 id="header_title">Кабинет клиента <b>[ ООО "ММ Поф Пэкэджинг" ]</b></h3>
     </div>
     <div id="content">
       {% block content %}
