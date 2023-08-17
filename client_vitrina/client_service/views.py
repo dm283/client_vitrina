@@ -6,9 +6,10 @@ from django.views.decorators.http import require_POST
 from datetime import datetime
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from urllib.parse import quote
 
 
-contact_test_id = 12134  # для тестовой версии, пока не добавлена страница аутентификации
+contact_test_id = 20263  # для тестовой версии, пока не добавлена страница аутентификации
 
 #  CONSIGNMENT ******************************************
 def consignment_list(request):
@@ -17,9 +18,16 @@ def consignment_list(request):
     except:
         consignments = ''
 
+    try:
+        key_id_list = consignments.values_list("key_id", flat=True)
+        documents = Document.objects.filter(guid_partia__in=key_id_list)
+    except:
+        documents = ''
+
     return render(request,
                   'client_service/consignment/list.html',
-                  {'consignments': consignments})
+                  {'consignments': consignments,
+                   'documents': documents})
 
 
 def consignment_update(request, id):
@@ -63,9 +71,16 @@ def carpass_list(request):
     except:
         carpasses = ''
 
+    try:
+        id_enter_list = carpasses.values_list("id_enter", flat=True)
+        documents = Document.objects.filter(id_enter__in=id_enter_list)
+    except:
+        documents = ''
+
     return render(request,
                   'client_service/carpass/list.html',
-                  {'carpasses': carpasses})
+                  {'carpasses': carpasses,
+                   'documents': documents})
 
 
 def carpass_update(request, id):
@@ -150,6 +165,7 @@ def document_download(request, id):
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="text/plain")
-            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            # response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            response['Content-Disposition'] = "attachment; filename*=utf-8''{}".format(quote(os.path.basename(file_path)))
             return response
     return Http404
