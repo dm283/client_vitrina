@@ -2,6 +2,7 @@ import os
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Consignment, Carpass, Contact, Document
 from .forms import ConsignmentForm, CarpassForm, DocumentForm
+from .forms import ConsignmentFiltersForm, CarpassFiltersForm
 from django.views.decorators.http import require_POST
 from datetime import datetime
 from django.conf import settings
@@ -24,10 +25,42 @@ def consignment_list(request):
     except:
         documents = ''
 
+    # фильтрация данных
+    form_filters = ConsignmentFiltersForm()
+    if request.method == 'POST':
+        form_filters = ConsignmentFiltersForm(data=request.POST)
+        if form_filters.is_valid():
+            cd = form_filters.cleaned_data
+            if cd['key_id']:
+                consignments = consignments.filter(key_id=cd['key_id'])
+            if cd['contact_name']:
+                consignments = consignments.filter(contact_name=cd['contact_name'])
+            if cd['broker_name']:
+                consignments = consignments.filter(broker_name=cd['broker_name'])
+            if cd['nttn']:
+                consignments = consignments.filter(nttn=cd['nttn'])
+            if cd['goods']:
+                consignments = consignments.filter(goods=cd['goods'])
+            if cd['dater_from']:
+                consignments = consignments.filter(dater__gte=cd['dater_from'])
+            if cd['dater_to']:
+                consignments = consignments.filter(dater__lte=cd['dater_to'])
+            if cd['dateo_from']:
+                consignments = consignments.filter(dateo__gte=cd['dateo_from'])
+            if cd['dateo_to']:
+                consignments = consignments.filter(dateo__lte=cd['dateo_to'])
+            if cd['car']:
+                consignments = consignments.filter(car=cd['car'])
+            if cd['on_terminal']:
+                consignments = consignments.filter(dateo__isnull=True)
+            else:
+                consignments = consignments.filter(dateo__isnull=False)
+
     return render(request,
                   'client_service/consignment/list.html',
                   {'consignments': consignments,
-                   'documents': documents})
+                   'documents': documents,
+                   'form_filters': form_filters, })
 
 
 def consignment_update(request, id):
@@ -77,10 +110,30 @@ def carpass_list(request):
     except:
         documents = ''
 
+    # фильтрация данных
+    form_filters = CarpassFiltersForm()
+    if request.method == 'POST':
+        form_filters = CarpassFiltersForm(data=request.POST)
+        if form_filters.is_valid():
+            cd = form_filters.cleaned_data
+            if cd['id_enter']:
+                carpasses = carpasses.filter(id_enter=cd['id_enter'])
+            if cd['ncar']:
+                carpasses = carpasses.filter(ncar=cd['ncar'])
+            if cd['ntir']:
+                carpasses = carpasses.filter(ntir=cd['ntir'])
+            if cd['nkont']:
+                carpasses = carpasses.filter(nkont=cd['nkont'])
+            if cd['dateen_from']:
+                carpasses = carpasses.filter(dateen__gte=cd['dateen_from'])
+            if cd['dateen_to']:
+                carpasses = carpasses.filter(dateen__lte=cd['dateen_to'])
+
     return render(request,
                   'client_service/carpass/list.html',
                   {'carpasses': carpasses,
-                   'documents': documents})
+                   'documents': documents,
+                   'form_filters': form_filters, })
 
 
 def carpass_update(request, id):
