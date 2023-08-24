@@ -10,7 +10,7 @@ from django.http import HttpResponse, Http404
 from urllib.parse import quote
 
 
-contact_test_id = 20263  # для тестовой версии, пока не добавлена страница аутентификации
+contact_test_id = 25201  # для тестовой версии, пока не добавлена страница аутентификации
 
 #  CONSIGNMENT ******************************************
 def consignment_list(request):
@@ -39,8 +39,8 @@ def consignment_list(request):
                 consignments = consignments.filter(broker_name=cd['broker_name'])
             if cd['nttn']:
                 consignments = consignments.filter(nttn=cd['nttn'])
-            if cd['goods']:
-                consignments = consignments.filter(goods=cd['goods'])
+            if cd['dkd']:
+                consignments = consignments.filter(dkd=cd['dkd'])
             if cd['dater_from']:
                 consignments = consignments.filter(dater__gte=cd['dater_from'])
             if cd['dater_to']:
