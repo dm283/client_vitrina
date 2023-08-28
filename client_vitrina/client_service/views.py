@@ -1,16 +1,33 @@
-import os
+import os, json
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Consignment, Carpass, Contact, Document
 from .forms import ConsignmentForm, CarpassForm, DocumentForm
 from .forms import ConsignmentFiltersForm, CarpassFiltersForm
 from django.views.decorators.http import require_POST
-from datetime import datetime
+from datetime import datetime, date
 from django.conf import settings
 from django.http import HttpResponse, Http404
 from urllib.parse import quote
 
 
 contact_test_id = 25201  # для тестовой версии, пока не добавлена страница аутентификации
+
+CONTACT_FOLDER = f'temp_files/{contact_test_id}'
+
+FILE_FILTERS = {}
+FILE_FILTERS['consignments'] = CONTACT_FOLDER + '/consignments_filters.json'
+FILE_FILTERS['carpass'] = CONTACT_FOLDER + '/carpass_filters.json'
+
+# COMMON_VIEWS - CONSIGNMENT - CARPASS - DOCUMENT
+
+#  COMMON_VIEWS *************************************
+def erase_filters(request, entity):
+    # erase all filters data - by deleting json file with it
+    print('ERASE FROM - ', entity)
+    if os.path.exists(FILE_FILTERS[entity]):
+        os.remove(FILE_FILTERS[entity])
+    return redirect(f'/client_service/{entity}')
+
 
 #  CONSIGNMENT ******************************************
 def consignment_list(request):
@@ -26,35 +43,62 @@ def consignment_list(request):
         documents = ''
 
     # фильтрация данных
-    form_filters = ConsignmentFiltersForm()
     if request.method == 'POST':
         form_filters = ConsignmentFiltersForm(data=request.POST)
         if form_filters.is_valid():
             cd = form_filters.cleaned_data
-            if cd['key_id']:
-                consignments = consignments.filter(key_id=cd['key_id'])
-            if cd['contact_name']:
-                consignments = consignments.filter(contact_name=cd['contact_name'])
-            if cd['broker_name']:
-                consignments = consignments.filter(broker_name=cd['broker_name'])
-            if cd['nttn']:
-                consignments = consignments.filter(nttn=cd['nttn'])
-            if cd['dkd']:
-                consignments = consignments.filter(dkd=cd['dkd'])
-            if cd['dater_from']:
-                consignments = consignments.filter(dater__gte=cd['dater_from'])
-            if cd['dater_to']:
-                consignments = consignments.filter(dater__lte=cd['dater_to'])
-            if cd['dateo_from']:
-                consignments = consignments.filter(dateo__gte=cd['dateo_from'])
-            if cd['dateo_to']:
-                consignments = consignments.filter(dateo__lte=cd['dateo_to'])
-            if cd['car']:
-                consignments = consignments.filter(car=cd['car'])
-            if cd['on_terminal']:
-                consignments = consignments.filter(dateo__isnull=True)
-            else:
-                consignments = consignments.filter(dateo__isnull=False)
+            # save filters data into json file
+            # cast datetime to str for ability of serializing
+            cd_date_casted = form_filters.cleaned_data
+            for d in cd_date_casted:
+                if (type(cd_date_casted[d]) is date):
+                    cd_date_casted[d] = cd_date_casted[d].strftime('%Y-%m-%d')
+            cd_json = json.dumps(cd_date_casted)
+            if not os.path.exists(CONTACT_FOLDER):
+                os.mkdir(CONTACT_FOLDER)
+            with open(FILE_FILTERS['consignments'], 'w', encoding='utf-8') as f:
+                f.write(cd_json)
+
+    else: # request.method == 'GET'
+        # load filters data from json file if it exists
+        if os.path.exists(FILE_FILTERS['consignments']):
+            with open(FILE_FILTERS['consignments'], 'r') as f:
+                cd = json.load(f)
+            form_filters = ConsignmentFiltersForm(initial=cd)
+        # create empty form if json file doesn't exit
+        else:
+            form_filters = ConsignmentFiltersForm()
+            return render(request,
+                    'client_service/consignment/list.html',
+                    {'consignments': consignments,
+                    'documents': documents,
+                    'form_filters': form_filters, })
+
+
+    if cd['key_id']:
+        consignments = consignments.filter(key_id=cd['key_id'])
+    if cd['contact_name']:
+        consignments = consignments.filter(contact_name=cd['contact_name'])
+    if cd['broker_name']:
+        consignments = consignments.filter(broker_name=cd['broker_name'])
+    if cd['nttn']:
+        consignments = consignments.filter(nttn=cd['nttn'])
+    if cd['dkd']:
+        consignments = consignments.filter(dkd=cd['dkd'])
+    if cd['dater_from']:
+        consignments = consignments.filter(dater__gte=cd['dater_from'])
+    if cd['dater_to']:
+        consignments = consignments.filter(dater__lte=cd['dater_to'])
+    if cd['dateo_from']:
+        consignments = consignments.filter(dateo__gte=cd['dateo_from'])
+    if cd['dateo_to']:
+        consignments = consignments.filter(dateo__lte=cd['dateo_to'])
+    if cd['car']:
+        consignments = consignments.filter(car=cd['car'])
+    if cd['on_terminal']:
+        consignments = consignments.filter(dateo__isnull=True)
+    else:
+        consignments = consignments.filter(dateo__isnull=False)
 
     return render(request,
                   'client_service/consignment/list.html',
@@ -111,23 +155,49 @@ def carpass_list(request):
         documents = ''
 
     # фильтрация данных
-    form_filters = CarpassFiltersForm()
     if request.method == 'POST':
         form_filters = CarpassFiltersForm(data=request.POST)
         if form_filters.is_valid():
             cd = form_filters.cleaned_data
-            if cd['id_enter']:
-                carpasses = carpasses.filter(id_enter=cd['id_enter'])
-            if cd['ncar']:
-                carpasses = carpasses.filter(ncar=cd['ncar'])
-            if cd['ntir']:
-                carpasses = carpasses.filter(ntir=cd['ntir'])
-            if cd['nkont']:
-                carpasses = carpasses.filter(nkont=cd['nkont'])
-            if cd['dateen_from']:
-                carpasses = carpasses.filter(dateen__gte=cd['dateen_from'])
-            if cd['dateen_to']:
-                carpasses = carpasses.filter(dateen__lte=cd['dateen_to'])
+            # save filters data into json file
+            # cast datetime to str for ability of serializing
+            cd_date_casted = form_filters.cleaned_data
+            for d in cd_date_casted:
+                if (type(cd_date_casted[d]) is date):
+                    cd_date_casted[d] = cd_date_casted[d].strftime('%Y-%m-%d')
+            cd_json = json.dumps(cd_date_casted)
+            if not os.path.exists(CONTACT_FOLDER):
+                os.mkdir(CONTACT_FOLDER)
+            with open(FILE_FILTERS['carpass'], 'w', encoding='utf-8') as f:
+                f.write(cd_json)
+
+    else: # request.method == 'GET'
+        # load filters data from json file if it exists
+        if os.path.exists(FILE_FILTERS['carpass']):
+            with open(FILE_FILTERS['carpass'], 'r') as f:
+                cd = json.load(f)
+            form_filters = CarpassFiltersForm(initial=cd)
+        # create empty form if json file doesn't exit
+        else:
+            form_filters = CarpassFiltersForm()
+            return render(request,
+                    'client_service/carpass/list.html',
+                    {'carpasses': carpasses,
+                    'documents': documents,
+                    'form_filters': form_filters, })
+
+    if cd['id_enter']:
+        carpasses = carpasses.filter(id_enter=cd['id_enter'])
+    if cd['ncar']:
+        carpasses = carpasses.filter(ncar=cd['ncar'])
+    if cd['ntir']:
+        carpasses = carpasses.filter(ntir=cd['ntir'])
+    if cd['nkont']:
+        carpasses = carpasses.filter(nkont=cd['nkont'])
+    if cd['dateen_from']:
+        carpasses = carpasses.filter(dateen__gte=cd['dateen_from'])
+    if cd['dateen_to']:
+        carpasses = carpasses.filter(dateen__lte=cd['dateen_to'])
 
     return render(request,
                   'client_service/carpass/list.html',

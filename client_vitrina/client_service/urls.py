@@ -16,6 +16,8 @@ urlpatterns = [
     path('consignments/<int:id>/close', views.consignment_close, name='consignment_close'),
     # path('consignments/<int:id>/add_document', views.consignment_add_document, name='consignment_add_document'),
 
+    path('erase_filters/<str:entity>/', views.erase_filters, name='erase_filters'),
+
     path('carpass', views.carpass_list, name='carpass_list'),
     path('carpass/<int:id>/', views.carpass_update, name='carpass_update'),
     path('carpass/<int:id>/update', views.carpass_update, name='carpass_update'),
